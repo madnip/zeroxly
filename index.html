@@ -3,6 +3,7 @@
 <head>
   <title>ZeroXly - AI Inbox Zero</title>
   
+  <script src="https://js.stripe.com/v3/"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
     body{min-height:100vh;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:50px 20px;text-align:center}
@@ -20,11 +21,30 @@
   <h1>🚀 ZEROXLY</h1>
   <h2>AI Inbox Zero Automator</h2>
   <p>Connect Gmail → AI auto-replies, extracts leads, zero config</p>
-  <button onclick="alert('🚀 Connected! Stripe ready!')">✨ Connect FREE Trial</button>
+  
+  <!-- 🔥 STRIPE LIVE BUTTON - PASTE YOUR PRICE ID HERE -->
+  <button onclick="checkout()">
+    💳 Subscribe $9/mo → LIVE PAYMENTS
+  </button>
+  
   <div class="stats">
     <div class="stat"><div>10K+</div>Emails Daily</div>
     <div class="stat"><div>98%</div>Auto-Replies</div>
     <div class="stat"><div>$9</div>Per Inbox/Mo</div>
   </div>
+
+  <script>
+    const stripe = Stripe('pklive51LcSbD2KNzZaZkHP11icimPlKpBjQiILTxCaiMJ2qByb5NHQEUTXjXnEX1FpwD2IpJslr1rx7F41MiSBprtDd53Z00pDo731EM');
+    
+    async function checkout() {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId: 'price_123' }) // ← PASTE YOUR PRICE ID HERE
+      });
+      const { sessionId } = await response.json();
+      stripe.redirectToCheckout({ sessionId });
+    }
+  </script>
 </body>
 </html>

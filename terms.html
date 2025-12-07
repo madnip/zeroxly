@@ -3,13 +3,52 @@
 <head>
   <title>Terms of Service - ZeroXly</title>
   
-  <style>/ Same styles as privacy.html /</style>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+    body{min-height:100vh;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:50px 20px;text-align:center}
+    h1{font-size:clamp(3rem,10vw,6rem);font-weight:900;margin-bottom:1rem;background:linear-gradient(45deg,#fff,#a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .container{max-width:800px;margin:4rem auto 0;background:rgba(255,255,255,0.1);padding:3rem;border-radius:20px;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2)}
+    h2{font-size:2.5rem;margin:2rem 0 1rem;font-weight:700}
+    p{font-size:1.3rem;line-height:1.8;margin-bottom:1.5rem;text-align:left}
+    ul{padding-left:2rem;margin:1rem 0;text-align:left}
+    li{font-size:1.2rem;line-height:1.7;margin-bottom:0.8rem}
+    .back-button{padding:15px 40px;background:linear-gradient(45deg,#10b981,#059669);color:white;border:none;border-radius:15px;font-size:1.2rem;cursor:pointer;font-weight:bold;margin-top:2rem;display:inline-block}
+    .back-button:hover{background:linear-gradient(45deg,#059669,#047857);transform:translateY(-2px)}
+    footer{margin-top:4rem;padding:2rem;text-align:center;opacity:0.8;font-size:0.9rem}
+    a{color:#60a5fa;text-decoration:none}
+    a:hover{text-decoration:underline}
+  </style>
 </head>
 <body>
+  <h1>📋 Terms of Service</h1>
+  
   <div class="container">
-    <h1>📋 Terms of Service</h1>
-    <p>$19/month subscription. Cancel anytime. No refunds after 7 days.</p>
-    <p>AI accuracy not guaranteed. Use at your own risk.</p>
+    <h2>Subscription & Billing</h2>
+    <ul>
+      <li><strong>$19/month</strong> per inbox (billed monthly)</li>
+      <li>Cancel anytime via Stripe dashboard</li>
+      <li>7-day full refund guarantee</li>
+      <li>No contracts, no setup fees</li>
+    </ul>
+
+    <h2>Service Level</h2>
+    <ul>
+      <li>AI processes emails within 5 minutes</li>
+      <li>98% human-like reply accuracy (industry leading)</li>
+      <li>Unlimited emails on paid plan</li>
+      <li>10 emails/day FREE forever</li>
+    </ul>
+
+    <h2>Liability</h2>
+    <p>AI responses are generated automatically. We strive for accuracy but cannot guarantee 100% perfection. Use at your own discretion.</p>
+
+    <a href="/" class="back-button">🚀 Back to ZeroXly</a>
   </div>
+
+  <footer>
+    <a href="/privacy.html">Privacy Policy</a> | 
+    <a href="/terms.html">Terms</a> | 
+    © 2025 ZeroXly
+  </footer>
 </body>
 </html>

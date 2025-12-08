@@ -1,38 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Dashboard - ZeroXly</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroXly | Live Dashboard</title>
+    <style>
+        /* Matrix / Hacker Theme */
+        body { margin: 0; font-family: 'Courier New', monospace; background-color: #0d0d0d; color: #00ff41; padding: 20px; }
+        .container { max-width: 600px; margin: 40px auto; border: 1px solid #333; padding: 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.1); }
+        h1 { text-align: center; text-shadow: 0 0 5px #00ff41; }
+        
+        .stat-box { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 30px 0; text-align: center; }
+        .stat-value { font-size: 2.5rem; font-weight: bold; }
+        .stat-label { font-size: 0.8rem; color: #888; text-transform: uppercase; }
+        
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: #fff; font-family: inherit; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; font-size: 1rem; margin-top: 10px; }
+        button:hover { background: #00cc33; box-shadow: 0 0 15px #00ff41; }
+        
+        .log-window { background: #000; border: 1px solid #333; padding: 10px; height: 150px; overflow-y: auto; font-size: 0.8rem; color: #888; margin-top: 20px; }
+        .status { margin-top: 10px; text-align: center; }
+    </style>
 </head>
-<body style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:50px;text-align:center;font-family:sans-serif">
-  <h1 style="font-size:50px">🎉 Dashboard Works!</h1>
-  <p style="font-size:25px">Your $19 payment = SUCCESS ✅</p>
-  <div style="background:rgba(255,255,255,0.1);padding:30px;margin:50px auto;max-width:800px;border-radius:20px">
-    <h2>📊 Demo Stats</h2>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:30px">
-      <div><div style="font-size:60px;color:#60a5fa">127</div>Emails</div>
-      <div><div style="font-size:60px;color:#60a5fa">23</div>Leads</div>
-      <div><div style="font-size:60px;color:#60a5fa">94%</div>Replies</div>
-    </div>
-  </div>
-  <div style="background:rgba(255,255,255,0.1);padding:30px;margin:50px auto;max-width:500px;border-radius:20px">
-  <h2 style="font-size:30px;margin-bottom:20px">🔌 Connect Email</h2>
-  <input id="email" placeholder="your@gmail.com" style="width:100%;padding:15px;font-size:18px;border:none;border-radius:10px;margin-bottom:15px">
-  <input id="password" type="password" placeholder="App Password" style="width:100%;padding:15px;font-size:18px;border:none;border-radius:10px;margin-bottom:15px">
-  <button onclick="connectEmail()" style="width:100%;padding:20px;background:#10b981;color:white;border:none;border-radius:15px;font-size:20px;font-weight:bold">✅ Connect Gmail</button>
-</div>
+<body>
 
-<script>
-function connectEmail() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  
-  if(email && password) {
-    alert('✅ Gmail Connected!\nAI processing started...\nStats updating live 👇');
-    // Real IMAP connection would go here
-  } else {
-    alert('Enter email + app password');
-  }
-}
-</script>
+    <div class="container">
+        <h1>ZeroXly Command</h1>
+
+        <div class="stat-box">
+            <div>
+                <div class="stat-value" id="processed">--</div>
+                <div class="stat-label">Scanned</div>
+            </div>
+            <div>
+                <div class="stat-value" id="leads">--</div>
+                <div class="stat-label">Leads</div>
+            </div>
+            <div>
+                <div class="stat-value" id="replies">--</div>
+                <div class="stat-label">Replies</div>
+            </div>
+        </div>
+
+        <div style="border-top: 1px solid #333; padding-top: 20px;">
+            <input type="email" id="email" placeholder="Gmail Address">
+            <input type="password" id="appPass" placeholder="App Password (Not login password)">
+            <button onclick="connectBot()" id="btn">INITIALIZE AGENT</button>
+            <div id="statusMsg" class="status">System Standby...</div>
+        </div>
+
+        <div class="log-window" id="logs">
+            > ZeroXly v1.0 initialized...<br>
+            > Waiting for user credentials...
+        </div>
+    </div>
+
+    <script>
+        // --- YOUR LIVE TUNNEL LINK ---
+        const API_URL = "https://wjswp-2a02-4780-2d-c1a2--1.a.free.pinggy.link/api";
+
+        async function updateStats() {
+            try {
+                // This talks to your VPS server.js!
+                const res = await fetch(`${API_URL}/stats`);
+                const data = await res.json();
+                
+                document.getElementById('processed').innerText = data.processed;
+                document.getElementById('leads').innerText = data.leads;
+                document.getElementById('replies').innerText = data.replies_drafted;
+                
+                if(data.processed > 0) log("Stats updated from server.");
+            } catch (e) {
+                console.log("Waiting for connection...");
+            }
+        }
+
+        async function connectBot() {
+            const email = document.getElementById('email').value;
+            const appPass = document.getElementById('appPass').value;
+            const btn = document.getElementById('btn');
+            
+            if(!email || !appPass) { alert("Enter credentials!"); return; }
+
+            btn.disabled = true;
+            btn.innerText = "CONNECTING TO VPS...";
+            log(`Attempting connection to ${email}...`);
+
+            try {
+                const res = await fetch(`${API_URL}/connect`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, appPassword: appPass })
+                });
+                const data = await res.json();
+                
+                document.getElementById('statusMsg').innerText = "ONLINE - AGENT ACTIVE";
+                document.getElementById('statusMsg').style.color = "#00ff41";
+                log("SUCCESS: Agent is scanning inbox.");
+                updateStats(); 
+            } catch (e) {
+                document.getElementById('statusMsg').innerText = "CONNECTION FAILED";
+                document.getElementById('statusMsg').style.color = "red";
+                log("ERROR: Could not reach VPS. Check if server.js is running.");
+            }
+            
+            btn.disabled = false;
+            btn.innerText = "INITIALIZE AGENT";
+        }
+
+        function log(msg) {
+            const logs = document.getElementById('logs');
+            logs.innerHTML += `> ${msg}<br>`;
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        // Auto-refresh stats every 3 seconds
+        setInterval(updateStats, 3000);
+    </script>
 </body>
 </html>
